@@ -48,3 +48,41 @@ class App extends React.Component {
 
 
 export default App
+
+
+
+// ===== functional component 
+
+import {useEffect, useState} from 'react';
+
+function Child({color}) {
+  const [childColor, setColor] = useState(color);
+
+  useEffect(() => {
+    setColor(color);
+
+    console.log('useEffect logic ran');
+  }, [color]); // 👈️ add props as dependencies
+
+  return (
+    <div>
+      <p style={{ color : childColor }} >Child component</p>
+    </div>
+  );
+}
+
+export default function App() {
+  const [color, setColor] = useState('red');
+
+  return (
+    <div>
+      <button onClick={() => setColor('blue')}>
+        change color
+      </button>
+
+      <hr />
+
+      <Child color={color} />
+    </div>
+  );
+}
