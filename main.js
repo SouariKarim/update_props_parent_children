@@ -86,3 +86,47 @@ export default function App() {
     </div>
   );
 }
+
+// Note that the function we passed to useEffect hook is also invoked on the initial render.
+
+// If you don't want to run the logic in your useEffect hook on the initial render, but only when the specific prop changes, use a ref to return early on the initial render.
+
+import {useEffect, useRef, useState} from 'react';
+
+function Child({parentCount}) {
+  const [childCount, setChildCount] = useState(0);
+
+  const isFirstRender = useRef(true);
+
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return; // 👈️ return early if first render
+    }
+    setChildCount(parentCount * 2);
+
+    console.log('useEffect logic ran');
+  }, [parentCount]);
+
+  return (
+    <div>
+      <button>Child count {childCount}</button>
+    </div>
+  );
+}
+
+export default function Parent() {
+  const [parentCount, setParentCount] = useState(0);
+
+  return (
+    <div>
+      <button onClick={() => setParentCount(current => current + 1)}>
+        Parent count: {parentCount}
+      </button>
+
+      <hr />
+
+      <Child parentCount={parentCount} />
+    </div>
+  );
+}
